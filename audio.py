@@ -3,7 +3,10 @@ import wave
 import sys
 from datetime import datetime
 import os
+import logging
 arr = os.listdir('.')
+logging.basicConfig(filename='audio_record.log', filemode='a', level=logging.DEBUG, 
+                    format='%(asctime)s %(message)s', datefmt='%m%d%Y %I:%M:%S %p')
 
 class AudioFile:
 
@@ -30,6 +33,7 @@ class AudioFile:
             rate = self.wf.getframerate(),
             output = True
         )
+        logging.info(f'Playing audio {filename}')
         for i in range(0, int(self.RATE / self.CHUNK * self.RECORD_SECONDS)):
             data = self.wf.readframes(self.CHUNK)
             self.stream.write(data)
@@ -37,6 +41,7 @@ class AudioFile:
 
 
     def record(self,sec=3):
+        self.RECORD_SECONDS=sec
         self.wf = wave.open(self.file, 'wb')
         self.p = pyaudio.PyAudio()
         self.stream = self.p.open(
@@ -46,8 +51,10 @@ class AudioFile:
                 input=True,
                 frames_per_buffer=self.CHUNK)
         frames = []
+        logging.info(f'Recording audio {self.file}')
+        print('start recording')
         for i in range(0, int(self.RATE / self.CHUNK * self.RECORD_SECONDS)):
-            data = self.stream.read(self.CHUNK)
+            data = self.stream.read(self.CHUNK, exception_on_overflow = False)
             frames.append(data)
         self.stream.stop_stream()
         self.wf.setnchannels(self.CHANNELS)
@@ -68,8 +75,11 @@ class AudioFile:
             if '.wav' in item:
                 nine_list.append(item)
         nine_list.sort(reverse=True)
-        print(nine_list[0:9])
-        for i in nine_list[0:9]:
+        print(nine_list[1:10])
+        for i in nine_list[10:]:
+            os.remove(os.path.join('.',i))
+            logging.info(f'Removing file {i}')
+        for i in nine_list[1:10]:
             self.play(os.path.join('.',i))
         
 
