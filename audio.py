@@ -11,7 +11,7 @@ class AudioFile:
         """ Init audio stream """ 
         self.file = file
         self.RECORD_SECONDS=3
-        self.CHUCK = 2
+        self.CHUNK = 2
         self.FORMAT = pyaudio.paInt16
         self.CHANNELS = 2
         self.RATE = 44100
@@ -73,14 +73,6 @@ class AudioFile:
             self.play(os.path.join('.',i))
         
 
-
-# Usage example for pyaudio
-stamp = str(int(datetime.utcnow().timestamp()))
-filename = f'{stamp}.wav'
-a = AudioFile(filename)
-#a.record()
-#a.play()
-a.play_last_nine()
 
 
 
