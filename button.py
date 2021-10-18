@@ -1,24 +1,23 @@
-import RPi.GPIO as GPIO
+from pynput.keyboard import Key, Listener
 import time
-from audio import AudioFile 
-from datetime import datetime
-import os
-import sys
 
-def record_n_play():
-    stamp = str(int(datetime.utcnow().timestamp()))
-    filename = f"{stamp}.wav"
-    a = AudioFile(filename)
-    a.record(sec=10)
-    a.play_last_nine()
-    a.play()
+def on_press(key):
+    try:
+        if key == key.f14:
+            print('{0} pressed'.format(key))
+            time.sleep(5)
+            return False
+    except AttributeError:
+        pass
 
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(11,GPIO.IN)
+def on_release(key):
+    print('{0} release'.format(key))
+    #if key == Key.esc:
+        # Stop listener
+    return False
 
-while True:
-    inputValue = GPIO.input(11)
-    if inputValue == False:
-        print("Button pressed")
-        time.sleep(0.3)
-        record_n_play()
+# Collect events until released
+while(True):
+    with Listener(on_press=on_press, on_release=on_release) as listener:
+        listener.join()
+    print('Next')
