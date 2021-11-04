@@ -11,11 +11,10 @@ def on_press(key):
         if key == key.f14:
             print('{0} pressed'.format(key))
             stamp = str(int(datetime.utcnow().timestamp()))
-			filename = f"{stamp}.wav"
-			a = AudioFile(filename)
-			a.record(sec=10)
-			a.play_last_nine()
-			a.play()
+            filename = f"{stamp}.wav"
+            a = AudioFile(filename)
+            a.record(sec=10)
+            a.play_last_ten()
             return False
     except AttributeError:
         pass

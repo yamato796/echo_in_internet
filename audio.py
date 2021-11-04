@@ -5,7 +5,7 @@ from datetime import datetime
 import os
 import logging
 arr = os.listdir('.')
-logging.basicConfig(filename='audio_record.log', filemode='a', level=logging.DEBUG, 
+logging.basicConfig(filename='audio_record.log', filemode='a', level=logging.INFO, 
                     format='%(asctime)s %(message)s', datefmt='%m%d%Y %I:%M:%S %p')
 
 class AudioFile:
@@ -16,8 +16,9 @@ class AudioFile:
         self.RECORD_SECONDS=3
         self.CHUNK = 2
         self.FORMAT = pyaudio.paInt16
-        self.CHANNELS = 2
+        self.CHANNELS = 1
         self.RATE = 44100
+        self.arr = os.listdir('.')
 
     def play(self,file=None):
         """ Play entire file """
@@ -69,18 +70,33 @@ class AudioFile:
         self.stream.close()
         self.p.terminate()
 
-    def play_last_nine(self):
+    def play_last_ten(self):
+        self.arr = os.listdir('.')
         nine_list = []
-        for item in arr:
+        for item in self.arr:
             if '.wav' in item:
                 nine_list.append(item)
         nine_list.sort(reverse=True)
+        for item in nine_list:
+            path = os.path.join('.',item)
+            size = os.path.getsize(path)
+            if size <= 0:
+                nine_list.pop(item)
+                logging.info(f'Removing file {item} due to file corruption')
+
+        print(nine_list)
         print(nine_list[1:10])
+        print(nine_list[10:])
         for i in nine_list[10:]:
             os.remove(os.path.join('.',i))
             logging.info(f'Removing file {i}')
-        for i in nine_list[1:10]:
-            self.play(os.path.join('.',i))
+        play_nine = nine_list[1:10]
+        play_nine.reverse()
+        for i in play_nine:
+            path = os.path.join('.',i)
+            self.play(path)
+        self.play(nine_list[0])
+
         
 
 
