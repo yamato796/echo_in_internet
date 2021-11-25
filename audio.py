@@ -16,7 +16,7 @@ class AudioFile:
         self.RECORD_SECONDS=3
         self.CHUNK = 2
         self.FORMAT = pyaudio.paInt16
-        self.CHANNELS = 1
+        self.CHANNELS = 2
         self.RATE = 44100
         self.arr = os.listdir('.')
 

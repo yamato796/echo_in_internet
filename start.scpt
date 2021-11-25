@@ -19,6 +19,9 @@ tell application "iTerm"
         set columns to 42
         write text "cd ~/echo_in_internet"
         #write text "tail -f audio_record.log"
+        write text "sleep 3" 
+        write text "tcpreplay -i en1 confession_3.pcap"
+        write text "clear"
         write text "python3 echo.py"
     end tell
 end tell
